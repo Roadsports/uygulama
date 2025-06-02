@@ -15,7 +15,7 @@
 </script>
   
   <meta charset="UTF-8" />
-  <title>CANLI TV Player</title>
+  <title>ROAD UYGULAMA</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     * {
@@ -459,6 +459,33 @@
 
 </body>
 </html>
+
+
+
+<script>
+  // Sağ tıklamayı engelleme
+  document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+    window.location.href = '/404';  // 404 sayfasına yönlendirme
+  });
+
+  // F12 tuşunu engelleme
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'F12') {
+      e.preventDefault();
+      window.location.href = '/404';  // 404 sayfasına yönlendirme
+    }
+  });
+
+  // F12'yi engellemeye yönelik başka bir yol
+  document.onkeydown = function (e) {
+    if (e.keyCode === 123) {  // F12 tuşu
+      window.location.href = '/404';  // 404 sayfasına yönlendirme
+      return false;
+    }
+  };
+</script>
+
 
 
 
