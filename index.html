@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>CANLI TV Player</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: #000;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    .player-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      object-fit: cover;
+    }
+
+    .controls, .channel-list, .live-info, .timer {
+      position: absolute;
+      z-index: 10;
+      transition: opacity 0.4s ease;
+    }
+
+    .controls {
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+      background: rgba(0,0,0,0.5);
+      padding: 8px 12px;
+      border-radius: 10px;
+      user-select: none;
+    }
+
+    .controls button {
+      padding: 10px 14px;
+      background: #ff0000; /* kırmızı arka plan */
+      border: none;
+      color: #000000; /* siyah yazı */
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 5px #ff4444;
+      user-select: none;
+    }
+
+    .controls button:hover {
+      background: #cc0000; /* koyu kırmızı hover */
+      color: #000000; /* hoverda da siyah */
+      box-shadow: 0 0 12px #ff0000;
+    }
+
+    .channel-list {
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      overflow-x: auto;
+      display: flex;
+      gap: 14px;
+      padding: 14px 12px;
+      background: rgba(0,0,0,0.65);
+      scrollbar-width: thin;
+      scrollbar-color: #222 #000;
+      scroll-behavior: smooth;
+    }
+    /* Kaydırma çubuğu (scrollbar) stil */
+    .channel-list::-webkit-scrollbar {
+      height: 8px;
+    }
+    .channel-list::-webkit-scrollbar-track {
+      background: #000;
+      border-radius: 4px;
+    }
+    .channel-list::-webkit-scrollbar-thumb {
+      background-color: #222;
+      border-radius: 4px;
+      border: 2px solid #000;
+    }
+
+    .channel-card {
+      flex: 0 0 auto;
+      min-width: 130px;
+      height: 75px;
+      background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+      color: #fff;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: 0 4px 10px rgba(255,0,0,0.3);
+      user-select: none;
+      position: relative;
+    }
+    .channel-card:hover {
+      background: linear-gradient(135deg, #ff0000, #8b0000);
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(255,0,0,0.6);
+    }
+
+    /* Seçili kanal efekti */
+    .channel-card.selected {
+      outline: 3px solid #ff3b3b;
+      box-shadow: 0 0 15px 4px #ff3b3b;
+      background: linear-gradient(135deg, #ff0000, #a00000);
+      transform: scale(1.08);
+      z-index: 20;
+    }
+
+    .live-info {
+      top: 20px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #ff3b3b;
+      font-weight: 800;
+      font-size: 18px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-shadow: 0 0 10px rgba(255, 59, 59, 0.8);
+      user-select: none;
+      background: rgba(30,0,0,0.6);
+      padding: 6px 14px;
+      border-radius: 14px;
+      box-shadow: 0 0 12px rgba(255,59,59,0.7);
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      background: #ff3b3b;
+      border-radius: 50%;
+      animation: blink 1.2s infinite;
+      box-shadow: 0 0 8px #ff3b3b;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .timer {
+      top: 60px;
+      left: 20px;
+      color: white;
+      font-size: 14px;
+      background: rgba(0,0,0,0.5);
+      padding: 6px 12px;
+      border-radius: 10px;
+      user-select: none;
+      font-weight: 600;
+      font-family: monospace;
+      box-shadow: 0 0 8px rgba(255,255,255,0.15);
+    }
+
+    /* UI gizleme */
+    .hide-ui .controls,
+    .hide-ui .channel-list,
+    .hide-ui .live-info,
+    .hide-ui .timer {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="player-container" id="playerContainer">
+    <video id="video-player" autoplay muted playsinline></video>
+
+    <div class="live-info">
+      <div class="dot"></div>
+      CANLI
+    </div>
+
+    <div class="timer" id="timer">00:00</div>
+
+    <div class="controls">
+      <button onclick="toggleMute()" id="muteBtn">🔈 Ses Aç</button>
+      <button onclick="toggleFullscreen()" id="fullscreenBtn">⛶ Tam Ekran</button>
+    </div>
+
+    <div class="channel-list" id="channelList">
+      <!-- Kanal Kartları buraya JS ile eklenecek -->
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    const video = document.getElementById('video-player');
+    const container = document.getElementById('playerContainer');
+    const timer = document.getElementById('timer');
+    const channelList = document.getElementById('channelList');
+    const muteBtn = document.getElementById('muteBtn');
+
+    const m3u8Links = [
+      "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/bein-sports-1.css&bas=https://nxn4.xyz/cdn/",
+      "https://gitlatte-a.hf.space/proxy?url=https%3A//zekonew.newkso.ru/zeko/premium62/mono.m3u8",
+      "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/s-sport.css&bas=https://nxn4.xyz/cdn/",
+      "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/s-sport-2.css&bas=https://nxn4.xyz/cdn/",
+      "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/spor-smart.css&bas=https://nxn4.xyz/cdn/",
+      "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/spor-smart-2.css&bas=https://nxn4.xyz/cdn/",
+      "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/tivibu-spor.css&bas=https://nxn4.xyz/cdn/",
+      "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/tivibu-spor-2.css&bas=https://nxn4.xyz/cdn/",
+      "https://beert7sqimrk0bfdupfgn6qew.medya.trt.com.tr/master_1080p.m3u8",
+      "https://klublsslubcgyiz7zqt5bz8il.medya.trt.com.tr/master_1080p.m3u8",
+      "https://tv-trt1.medya.trt.com.tr/master_1080.m3u8",
+      "https://trkvz.daioncdn.net/atv/atv_1080p.m3u8?e=1748901623&st=x62X_Hye5g1cEPCw-vBACA&sid=7gjpaczfkdxn&app=d1ce2d40-5256-4550-b02e-e73c185a314e&ce=3",
+      "https://ciner-live.daioncdn.net/showtv/showtv_720p.m3u8",
+      "https://demiroren-live.daioncdn.net/kanald/kanald_1080p.m3u8",
+      "https://dogus-live.daioncdn.net/startv/startv_720p.m3u8",
+      "https://kanal7-live.daioncdn.net/kanal7/kanal7_1080p.m3u8",
+      "https://uycyyuuzyh.turknet.ercdn.net/nphindgytw/nowtv/nowtv_480p.m3u8",
+      "https://tv8-live.daioncdn.net/tv8/tv8_1080p.m3u8",
+      "https://tv8-live.daioncdn.net/tv8bucuk/tv8bucuk_1080p.m3u8",
+      "https://beyaztv-live.daioncdn.net/beyaztv/beyaztv_720p.m3u8"
+    ];
+
+    const channelNames = [
+      " beIN Sports 1", "beIN Sports 1", "S Sport", "S Sport 2", "Spor Smart ", "Spor Smart 2 ", " Tivibu Spor", " Tivibu Spor 2",
+      " Tabii Spor 1", " Tabii Spor 2", "TRT 1", "ATV", "Show TV", " Kanal D", "Star TV ",
+      "Kanal 7", "NOW TV", "TV 8", "TV 8.5", " Beyaz Tv"
+    ];
+
+    let hls;
+    let activeIndex = 0;
+
+    function createChannelCards() {
+      channelList.innerHTML = '';
+      for(let i = 0; i < channelNames.length; i++) {
+        const card = document.createElement('div');
+        card.classList.add('channel-card');
+        card.textContent = channelNames[i];
+        card.dataset.url = m3u8Links[i] || m3u8Links[0];
+        card.dataset.index = i;
+        card.addEventListener('click', () => {
+          changeChannel(card.dataset.url, card);
+          activeIndex = i;
+          updateSelectedCard();
+          scrollToCard(activeIndex);
+        });
+        channelList.appendChild(card);
+      }
+    }
+
+    function updateSelectedCard() {
+      document.querySelectorAll('.channel-card').forEach(card => {
+        card.classList.remove('selected');
+      });
+      const cards = document.querySelectorAll('.channel-card');
+      if(cards[activeIndex]) cards[activeIndex].classList.add('selected');
+    }
+
+    function scrollToCard(index) {
+      const card = document.querySelector(`.channel-card[data-index="${index}"]`);
+      if (card) {
+        // Kanal listesinin yatay scrollunu ayarla, kart ortada dursun
+        const scrollLeft = card.offsetLeft - (channelList.clientWidth / 2) + (card.clientWidth / 2);
+        channelList.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+      }
+    }
+
+    function changeChannel(url, card) {
+      if (hls) {
+        hls.destroy();
+      }
+      if (Hls.isSupported()) {
+        hls = new Hls();
+        hls.loadSource(url);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+          video.play().catch(() => {});
+        });
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = url;
+        video.addEventListener('loadedmetadata', () => {
+          video.play().catch(() => {});
+        });
+      } else {
+        alert("Tarayıcınız HLS formatını desteklemiyor.");
+      }
+      setActiveCard(card);
+    }
+
+    function setActiveCard(card) {
+      document.querySelectorAll('.channel-card').forEach(c => {
+        c.classList.remove('selected');
+      });
+      card.classList.add('selected');
+    }
+
+    function toggleMute() {
+      video.muted = !video.muted;
+      muteBtn.textContent = video.muted ? '🔇 Sessiz' : '🔈 Ses';
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        container.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    let uiTimeout;
+    function showUI() {
+      container.classList.remove('hide-ui');
+      clearTimeout(uiTimeout);
+      uiTimeout = setTimeout(() => {
+        container.classList.add('hide-ui');
+      }, 2500);
+    }
+
+    container.addEventListener('mousemove', showUI);
+    container.addEventListener('touchstart', showUI);
+
+    // Uzaktan kumanda tuşları ile kanal seçme:
+    window.addEventListener('keydown', (e) => {
+      if (container.classList.contains('hide-ui')) {
+        showUI(); // UI görünür olsun tuşa basınca
+      }
+
+      if (e.key === 'ArrowRight') {
+        // Sonraki kanala geç
+        if (activeIndex < channelNames.length - 1) {
+          activeIndex++;
+          changeChannel(m3u8Links[activeIndex], document.querySelector(`.channel-card[data-index="${activeIndex}"]`));
+          updateSelectedCard();
+          scrollToCard(activeIndex);
+        }
+        e.preventDefault();
+      } else if (e.key === 'ArrowLeft') {
+        // Önceki kanala geç
+        if (activeIndex > 0) {
+          activeIndex--;
+          changeChannel(m3u8Links[activeIndex], document.querySelector(`.channel-card[data-index="${activeIndex}"]`));
+          updateSelectedCard();
+          scrollToCard(activeIndex);
+        }
+        e.preventDefault();
+      }
+    });
+
+    window.onload = () => {
+      createChannelCards();
+      // İlk kanalı yükle
+      changeChannel(m3u8Links[0], document.querySelector(`.channel-card[data-index="0"]`));
+      activeIndex = 0;
+      updateSelectedCard();
+      scrollToCard(activeIndex);
+      showUI();
+
+      setInterval(() => {
+        const now = new Date();
+        timer.textContent = now.toLocaleTimeString('tr-TR', {hour12:false});
+      }, 1000);
+    };
+  </script>
+</body>
+</html>
