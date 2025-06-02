@@ -391,3 +391,76 @@
   </script>
 </body>
 </html>
+
+
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Yatay Mod Zorunlu</title>
+<style>
+  /* Body ve html tam ekran */
+  html, body {
+    margin: 0; padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+  }
+
+  /* Eğer cihaz portrait moddaysa bu uyarıyı göster */
+  #rotate-warning {
+    display: none;
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    background: #000;
+    color: #fff;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  /* Yatay moddaysa site içeriği görünür */
+  #site-content {
+    display: block;
+    padding: 20px;
+  }
+
+  /* Dikey moddaysa uyarıyı göster, siteyi gizle */
+  @media screen and (orientation: portrait) {
+    #rotate-warning {
+      display: flex;
+    }
+    #site-content {
+      display: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="rotate-warning">
+  <p>Lütfen cihazınızı yatay moda çevirin (landscape)!</p>
+  <p>Site sadece yatay modda kullanılabilir.</p>
+</div>
+
+<div id="site-content">
+  <h1>Hoşgeldiniz!</h1>
+  <p>Bu site sadece yatay modda kullanılabilir.</p>
+  <!-- Site içeriğin buraya -->
+</div>
+
+</body>
+</html>
+
+
+
+
+
