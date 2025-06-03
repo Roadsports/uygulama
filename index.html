@@ -227,34 +227,50 @@
     const muteBtn = document.getElementById('muteBtn');
 
     const m3u8Links = [
-      "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/bein-sports-1.css&bas=https://nxn4.xyz/cdn/",
-      "https://gitlatte-a.hf.space/proxy?url=https%3A//zekonew.newkso.ru/zeko/premium62/mono.m3u8",
-      "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/s-sport.css&bas=https://nxn4.xyz/cdn/",
-      "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/s-sport-2.css&bas=https://nxn4.xyz/cdn/",
-      "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/spor-smart.css&bas=https://nxn4.xyz/cdn/",
-      "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/spor-smart-2.css&bas=https://nxn4.xyz/cdn/",
-      "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/tivibu-spor.css&bas=https://nxn4.xyz/cdn/",
-      "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/tivibu-spor-2.css&bas=https://nxn4.xyz/cdn/",
-      "https://beert7sqimrk0bfdupfgn6qew.medya.trt.com.tr/master_1080p.m3u8",
-      "https://klublsslubcgyiz7zqt5bz8il.medya.trt.com.tr/master_1080p.m3u8",
-      "https://tv-trt1.medya.trt.com.tr/master_1080.m3u8",
-      "https://trkvz.daioncdn.net/atv/atv_1080p.m3u8?e=1748901623&st=x62X_Hye5g1cEPCw-vBACA&sid=7gjpaczfkdxn&app=d1ce2d40-5256-4550-b02e-e73c185a314e&ce=3",
-      "https://ciner-live.daioncdn.net/showtv/showtv_720p.m3u8",
-      "https://demiroren-live.daioncdn.net/kanald/kanald_1080p.m3u8",
-      "https://dogus-live.daioncdn.net/startv/startv_720p.m3u8",
-      "https://kanal7-live.daioncdn.net/kanal7/kanal7_1080p.m3u8",
-      "https://uycyyuuzyh.turknet.ercdn.net/nphindgytw/nowtv/nowtv_480p.m3u8",
-      "https://tv8-live.daioncdn.net/tv8/tv8_1080p.m3u8",
-      "https://tv8-live.daioncdn.net/tv8bucuk/tv8bucuk_1080p.m3u8",
-      "https://beyaztv-live.daioncdn.net/beyaztv/beyaztv_720p.m3u8"
-      
-    ];
+  "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/bein-sports-1.css&bas=https://nxn4.xyz/cdn/",
+  "https://gitlatte-a.hf.space/proxy?url=https%3A//zekonew.newkso.ru/zeko/premium62/mono.m3u8",
+  "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/s-sport.css&bas=https://nxn4.xyz/cdn/",
+  "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/s-sport-2.css&bas=https://nxn4.xyz/cdn/",
+  "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/spor-smart.css&bas=https://nxn4.xyz/cdn/",
+  "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/spor-smart-2.css&bas=https://nxn4.xyz/cdn/",
+  "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/tivibu-spor.css&bas=https://nxn4.xyz/cdn/",
+  "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/tivibu-spor-2.css&bas=https://nxn4.xyz/cdn/",
+  "https://beert7sqimrk0bfdupfgn6qew.medya.trt.com.tr/master_1080p.m3u8",
+  "https://klublsslubcgyiz7zqt5bz8il.medya.trt.com.tr/master_1080p.m3u8",
+  "https://tv-trt1.medya.trt.com.tr/master_1080.m3u8",
+  "https://trkvz.daioncdn.net/atv/atv_1080p.m3u8?e=1748901623&st=x62X_Hye5g1cEPCw-vBACA&sid=7gjpaczfkdxn&app=d1ce2d40-5256-4550-b02e-e73c185a314e&ce=3",
+  "https://ciner-live.daioncdn.net/showtv/showtv_720p.m3u8",
+  "https://demiroren-live.daioncdn.net/kanald/kanald_1080p.m3u8",
+  "https://dogus-live.daioncdn.net/startv/startv_720p.m3u8",
+  "https://kanal7-live.daioncdn.net/kanal7/kanal7_1080p.m3u8",
+  "https://uycyyuuzyh.turknet.ercdn.net/nphindgytw/nowtv/nowtv_480p.m3u8",
+  "https://tv8-live.daioncdn.net/tv8/tv8_1080p.m3u8",
+  "https://tv8-live.daioncdn.net/tv8bucuk/tv8bucuk_1080p.m3u8",
+  "https://beyaztv-live.daioncdn.net/beyaztv/beyaztv_720p.m3u8",
 
-    const channelNames = [
-      " beIN Sports 1", "beIN Sports 1", "S Sport", "S Sport 2", "Spor Smart ", "Spor Smart 2 ", " Tivibu Spor", " Tivibu Spor 2",
-      " Tabii Spor 1", " Tabii Spor 2", "TRT 1", "ATV", "Show TV", " Kanal D", "Star TV ",
-      "Kanal 7", "NOW TV", "TV 8", "TV 8.5", " Beyaz Tv",
-    ];
+  // Yeni eklenenler:
+  "https://example.com/fox-tv.m3u8",
+  "https://example.com/haberturk.m3u8",
+  "https://example.com/cnn-turk.m3u8",
+  "https://example.com/ntv.m3u8",
+  "https://example.com/ulke-tv.m3u8",
+  "https://example.com/teve2.m3u8",
+  "https://example.com/tlc.m3u8",
+  "https://example.com/dmax.m3u8",
+  "https://example.com/bloomberg.m3u8",
+  "https://example.com/360tv.m3u8"
+];
+
+const channelNames = [
+  " beIN Sports 1", "beIN Sports 1", "S Sport", "S Sport 2", "Spor Smart ", "Spor Smart 2 ", " Tivibu Spor", " Tivibu Spor 2",
+  " Tabii Spor 1", " Tabii Spor 2", "TRT 1", "ATV", "Show TV", " Kanal D", "Star TV ",
+  "Kanal 7", "NOW TV", "TV 8", "TV 8.5", " Beyaz Tv",
+
+  // Yeni eklenenler:
+  "FOX TV", "Habertürk", "CNN Türk", "NTV", "Ülke TV",
+  "Teve2", "TLC", "DMAX", "Bloomberg HT", "360 TV"
+];
+
 
     let hls;
     let activeIndex = 0;
