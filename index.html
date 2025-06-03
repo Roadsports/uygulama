@@ -218,15 +218,48 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <script>
-    const video = document.getElementById('video-player');
-    const container = document.getElementById('playerContainer');
-    const timer = document.getElementById('timer');
-    const channelList = document.getElementById('channelList');
-    const muteBtn = document.getElementById('muteBtn');
+ <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+  const video = document.getElementById('video-player');
+  const container = document.getElementById('playerContainer');
+  const timer = document.getElementById('timer');
+  const channelList = document.getElementById('channelList');
+  const muteBtn = document.getElementById('muteBtn');
 
-    const m3u8Links = [
+  // Kanal logoları URL'leri (kanal isimleriyle aynı indekslerde olmalı)
+  const channelLogos = [
+    "https://i.hizliresim.com/48n8jtz.jpg", // beIN Sports 1
+    "https://link-to-logo1.png",
+    "https://yt3.googleusercontent.com/gvJvmHjz_AD2oWOrKpMHrc6PkrPaf9ZJn714gU1hOYxOh7XWqLbSjwniRy9wXxs0R6vyIFsCivA=s900-c-k-c0x00ffffff-no-rj",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkZm6RRq65MdCnTi2cbe3303FJqm9w-UfTdQ&s",
+    "https://image.milimaj.com/i/milliyet/75/0x0/610b8f6086b2473954e10e0e.jpg",
+    "https://image.milimaj.com/i/milliyet/75/0x0/610b8f6086b2473954e10e0e.jpg",
+    "https://yt3.googleusercontent.com/VfKm_ajwsvkrsG4O6-5m1-LBAo8mgiAz4htzprv1zcF5liZ1Zgz5ANNbU_PYI8CE173sFIOqtQ=s900-c-k-c0x00ffffff-no-rj",
+    "https://yt3.googleusercontent.com/VfKm_ajwsvkrsG4O6-5m1-LBAo8mgiAz4htzprv1zcF5liZ1Zgz5ANNbU_PYI8CE173sFIOqtQ=s900-c-k-c0x00ffffff-no-rj",
+    "https://yt3.googleusercontent.com/fnTAQELerKbTGtUKO0Iu0irkcVP1z0z-kKG-BdZetLZPK_G9yf8z8PPhIPDBfhmWUQe5Q59BqA=s900-c-k-c0x00ffffff-no-rj",
+    "https://yt3.googleusercontent.com/fnTAQELerKbTGtUKO0Iu0irkcVP1z0z-kKG-BdZetLZPK_G9yf8z8PPhIPDBfhmWUQe5Q59BqA=s900-c-k-c0x00ffffff-no-rj",
+    "https://images.seeklogo.com/logo-png/26/2/trt-1-logo-png_seeklogo-260967.png",
+    "https://iaatv.tmgrup.com.tr/385c7c/0/0/0/0/0/0?u=https://iatv.tmgrup.com.tr/video/thumbnails/2016/05/16/959x566/1463401075876.jpg",
+    "https://play-lh.googleusercontent.com/0sOPBAP2kN1gvVFLtCVsLhOrcZApUxZG8njmWOj26lRbiVJ723731GtyKJl-LFjd2Q=w240-h480-rw",
+    "https://image.hurimg.com/i/hurriyet/75/0x0/652e56aa4e3fe11a0c30a53f.jpg",
+    "https://img.ulusal.com.tr/storage/files/images/2022/12/16/star-tv-yayin-akisi-f0397-9IsC.jpg",
+    "https://e7.pngegg.com/pngimages/504/934/png-clipart-kanal-7-high-definition-television-turkey-live-television-a-haber-television-emblem.png",
+    "https://play-lh.googleusercontent.com/gcb-eDybc16uY9SkMMU_zH0Sec7Q2KVdvLu4P7ToD_8tGmqmj6ILIS8t_G3KU11t_Ik",
+    "https://play-lh.googleusercontent.com/O33jKDmxLGLxzK8-f3DGhnF7YSt_Xfb4q9LdvhNsIttoaDAGNsjmb1ozJEtRhL9uww",
+    "https://assets.goal.com/images/v3/blt95ee46e99c9d32b6/1u49nx7og52yq1efvorc6ax1g0.jpg?auto=webp&format=pjpg&width=3840&quality=60",
+    "https://static.ssportplus.com/wp-content/uploads/2024/03/Beyaz-TV.png",
+    "https://pbs.twimg.com/profile_images/1715419203610857472/W2ZpsXbt_400x400.jpg", 
+    "https://upload.wikimedia.org/wikipedia/commons/2/25/DMAX_Logo_16_05_2011.jpg",
+    "https://1000logos.net/wp-content/uploads/2020/08/TLC-Logo.png",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9KcwkOK4NcheFjJ7VXGGteW9CZwi9_Sybbw&s",
+    "https://canlitvulusal.tr/wp-content/uploads/2023/12/tv360-logo.png",
+    "https://cdn.freelogovectors.net/wp-content/uploads/2018/03/haberturk-logo.png",
+    "https://www.log.com.tr/wp-content/uploads/2018/01/national-geographic-dergisinin-130-yil-boyunca-cikan-tum-kapaklari-bu-videoda-izle-3.jpg",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrGq2uz0_eGVTo6g3ddGhIJIedXOAgZSx61w&s",
+    "https://w7.pngwing.com/pngs/221/526/png-transparent-bloomberg-television-hd-logo-thumbnail.png",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRasT3LuMMGfZ7f1FaeQn9K6u2GZXoiJvem7Q&s",
+  ];
+  const m3u8Links = [
   "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/bein-sports-1.css&bas=https://nxn4.xyz/cdn/",
   "https://gitlatte-a.hf.space/proxy?url=https%3A//zekonew.newkso.ru/zeko/premium62/mono.m3u8",
   "https://p2zgpjpzhpu30th994bn1bknnekjv0.top/cek2.m3u8?u=https://nxn4.xyz/cdn/s-sport.css&bas=https://nxn4.xyz/cdn/",
@@ -272,48 +305,89 @@ const channelNames = [
 ];
 
 
-    let hls;
-    let activeIndex = 0;
+  let hls;
+  let activeIndex = 0;
 
-    function createChannelCards() {
-      channelList.innerHTML = '';
-      for(let i = 0; i < channelNames.length; i++) {
-        const card = document.createElement('div');
-        card.classList.add('channel-card');
-        card.textContent = channelNames[i];
-        card.dataset.url = m3u8Links[i] || m3u8Links[0];
-        card.dataset.index = i;
-        card.addEventListener('click', () => {
-          changeChannel(card.dataset.url, card);
-          activeIndex = i;
-          updateSelectedCard();
-          scrollToCard(activeIndex);
-        });
-        channelList.appendChild(card);
-      }
-    }
+  // Yükleniyor overlay ve logo
+  let loadingOverlay = document.createElement('div');
+  loadingOverlay.style.position = 'absolute';
+  loadingOverlay.style.top = '0';
+  loadingOverlay.style.left = '0';
+  loadingOverlay.style.width = '100%';
+  loadingOverlay.style.height = '100%';
+  loadingOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+  loadingOverlay.style.display = 'flex';
+  loadingOverlay.style.flexDirection = 'column';
+  loadingOverlay.style.alignItems = 'center';
+  loadingOverlay.style.justifyContent = 'center';
+  loadingOverlay.style.color = 'white';
+  loadingOverlay.style.fontSize = '1.5rem';
+  loadingOverlay.style.zIndex = '10';
+  loadingOverlay.style.pointerEvents = 'none';
+  loadingOverlay.style.visibility = 'hidden';
 
-    function updateSelectedCard() {
-      document.querySelectorAll('.channel-card').forEach(card => {
-        card.classList.remove('selected');
+  let logoImg = document.createElement('img');
+  logoImg.style.maxWidth = '150px';
+  logoImg.style.marginBottom = '15px';
+  loadingOverlay.appendChild(logoImg);
+
+  let loadingText = document.createElement('div');
+  loadingText.textContent = 'Yükleniyor...';
+  loadingOverlay.appendChild(loadingText);
+
+  container.style.position = 'relative';
+  container.appendChild(loadingOverlay);
+
+  function createChannelCards() {
+    channelList.innerHTML = '';
+    for(let i = 0; i < channelNames.length; i++) {
+      const card = document.createElement('div');
+      card.classList.add('channel-card');
+      card.textContent = channelNames[i];
+      card.dataset.url = m3u8Links[i] || m3u8Links[0];
+      card.dataset.index = i;
+      card.addEventListener('click', () => {
+        changeChannel(card.dataset.url, card);
+        activeIndex = i;
+        updateSelectedCard();
+        scrollToCard(activeIndex);
       });
-      const cards = document.querySelectorAll('.channel-card');
-      if(cards[activeIndex]) cards[activeIndex].classList.add('selected');
+      channelList.appendChild(card);
     }
+  }
 
-    function scrollToCard(index) {
-      const card = document.querySelector(`.channel-card[data-index="${index}"]`);
-      if (card) {
-        // Kanal listesinin yatay scrollunu ayarla, kart ortada dursun
-        const scrollLeft = card.offsetLeft - (channelList.clientWidth / 2) + (card.clientWidth / 2);
-        channelList.scrollTo({ left: scrollLeft, behavior: 'smooth' });
-      }
+  function updateSelectedCard() {
+    document.querySelectorAll('.channel-card').forEach(card => {
+      card.classList.remove('selected');
+    });
+    const cards = document.querySelectorAll('.channel-card');
+    if(cards[activeIndex]) cards[activeIndex].classList.add('selected');
+  }
+
+  function scrollToCard(index) {
+    const card = document.querySelector(`.channel-card[data-index="${index}"]`);
+    if (card) {
+      const scrollLeft = card.offsetLeft - (channelList.clientWidth / 2) + (card.clientWidth / 2);
+      channelList.scrollTo({ left: scrollLeft, behavior: 'smooth' });
     }
+  }
 
-    function changeChannel(url, card) {
-      if (hls) {
-        hls.destroy();
-      }
+  function changeChannel(url, card) {
+    loadingOverlay.style.visibility = 'visible';
+    logoImg.src = channelLogos[card.dataset.index] || '';
+    loadingOverlay.style.pointerEvents = 'auto';
+
+    if (hls) {
+      hls.destroy();
+      hls = null;
+    }
+    video.pause();
+    video.src = '';
+
+    setTimeout(() => {
+      loadingOverlay.style.visibility = 'hidden';
+      loadingOverlay.style.pointerEvents = 'none';
+
       if (Hls.isSupported()) {
         hls = new Hls();
         hls.loadSource(url);
@@ -329,83 +403,82 @@ const channelNames = [
       } else {
         alert("Tarayıcınız HLS formatını desteklemiyor.");
       }
-      setActiveCard(card);
-    }
+    }, 3000);
 
-    function setActiveCard(card) {
-      document.querySelectorAll('.channel-card').forEach(c => {
-        c.classList.remove('selected');
-      });
-      card.classList.add('selected');
-    }
+    setActiveCard(card);
+  }
 
-    function toggleMute() {
-      video.muted = !video.muted;
-      muteBtn.textContent = video.muted ? '🔇 Sessiz' : '🔈 Ses';
-    }
-
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-        container.requestFullscreen();
-      } else {
-        document.exitFullscreen();
-      }
-    }
-
-    let uiTimeout;
-    function showUI() {
-      container.classList.remove('hide-ui');
-      clearTimeout(uiTimeout);
-      uiTimeout = setTimeout(() => {
-        container.classList.add('hide-ui');
-      }, 2500);
-    }
-
-    container.addEventListener('mousemove', showUI);
-    container.addEventListener('touchstart', showUI);
-
-    // Uzaktan kumanda tuşları ile kanal seçme:
-    window.addEventListener('keydown', (e) => {
-      if (container.classList.contains('hide-ui')) {
-        showUI(); // UI görünür olsun tuşa basınca
-      }
-
-      if (e.key === 'ArrowRight') {
-        // Sonraki kanala geç
-        if (activeIndex < channelNames.length - 1) {
-          activeIndex++;
-          changeChannel(m3u8Links[activeIndex], document.querySelector(`.channel-card[data-index="${activeIndex}"]`));
-          updateSelectedCard();
-          scrollToCard(activeIndex);
-        }
-        e.preventDefault();
-      } else if (e.key === 'ArrowLeft') {
-        // Önceki kanala geç
-        if (activeIndex > 0) {
-          activeIndex--;
-          changeChannel(m3u8Links[activeIndex], document.querySelector(`.channel-card[data-index="${activeIndex}"]`));
-          updateSelectedCard();
-          scrollToCard(activeIndex);
-        }
-        e.preventDefault();
-      }
+  function setActiveCard(card) {
+    document.querySelectorAll('.channel-card').forEach(c => {
+      c.classList.remove('selected');
     });
+    card.classList.add('selected');
+  }
 
-    window.onload = () => {
-      createChannelCards();
-      // İlk kanalı yükle
-      changeChannel(m3u8Links[0], document.querySelector(`.channel-card[data-index="0"]`));
-      activeIndex = 0;
-      updateSelectedCard();
-      scrollToCard(activeIndex);
+  function toggleMute() {
+    video.muted = !video.muted;
+    muteBtn.textContent = video.muted ? '🔇 Sessiz' : '🔈 Ses';
+  }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      container.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  let uiTimeout;
+  function showUI() {
+    container.classList.remove('hide-ui');
+    clearTimeout(uiTimeout);
+    uiTimeout = setTimeout(() => {
+      container.classList.add('hide-ui');
+    }, 2500);
+  }
+
+  container.addEventListener('mousemove', showUI);
+  container.addEventListener('touchstart', showUI);
+
+  window.addEventListener('keydown', (e) => {
+    if (container.classList.contains('hide-ui')) {
       showUI();
+    }
 
-      setInterval(() => {
-        const now = new Date();
-        timer.textContent = now.toLocaleTimeString('tr-TR', {hour12:false});
-      }, 1000);
-    };
-  </script>
+    if (e.key === 'ArrowRight') {
+      if (activeIndex < channelNames.length - 1) {
+        activeIndex++;
+        changeChannel(m3u8Links[activeIndex], document.querySelector(`.channel-card[data-index="${activeIndex}"]`));
+        updateSelectedCard();
+        scrollToCard(activeIndex);
+      }
+      e.preventDefault();
+    } else if (e.key === 'ArrowLeft') {
+      if (activeIndex > 0) {
+        activeIndex--;
+        changeChannel(m3u8Links[activeIndex], document.querySelector(`.channel-card[data-index="${activeIndex}"]`));
+        updateSelectedCard();
+        scrollToCard(activeIndex);
+      }
+      e.preventDefault();
+    }
+  });
+
+  window.onload = () => {
+    createChannelCards();
+    changeChannel(m3u8Links[0], document.querySelector(`.channel-card[data-index="0"]`));
+    activeIndex = 0;
+    updateSelectedCard();
+    scrollToCard(activeIndex);
+    showUI();
+
+    setInterval(() => {
+      const now = new Date();
+      timer.textContent = now.toLocaleTimeString('tr-TR', {hour12:false});
+    }, 1000);
+  };
+</script>
+
 </body>
 </html>
 
