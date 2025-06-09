@@ -710,54 +710,7 @@ const channelNames = [
 
 
 
-<style>
-  body {
-    -webkit-user-select: none; /* Chrome/Safari */
-    -moz-user-select: none;    /* Firefox */
-    -ms-user-select: none;     /* IE10+ */
-    user-select: none;         /* Standart */
-  }
-</style>
 
-<script>
-  // Sağ tık engelle
-  document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    alert('Sağ tık engellendi!');
-  });
-
-  // Kopyalama engelle
-  document.addEventListener('copy', function(e) {
-    e.preventDefault();
-    alert('Kopyalama engellendi!');
-  });
-
-  // Seçimi engelle
-  document.addEventListener('selectstart', function(e) {
-    e.preventDefault();
-  });
-
-  // DevTools kısayollarını engelle
-  document.addEventListener('keydown', function(e) {
-    if (
-      e.key === 'F12' ||
-      (e.ctrlKey && e.shiftKey && ['I', 'C', 'J'].includes(e.key)) ||
-      (e.ctrlKey && ['U', 'S'].includes(e.key))
-    ) {
-      e.preventDefault();
-      alert('Bu işlem devre dışı bırakıldı.');
-    }
-  });
-
-  // DevTools açıldığını tespit et ve yönlendir
-  setInterval(function () {
-    if (window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160) {
-      document.body.innerHTML = "";
-      alert("İnceleme aracı tespit edildi!");
-      window.location.href = "https://www.google.com";
-    }
-  }, 1000);
-</script>
 
 
 
